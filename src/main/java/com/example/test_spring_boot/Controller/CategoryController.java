@@ -1,17 +1,18 @@
 package com.example.test_spring_boot.Controller;
 
 import com.example.test_spring_boot.Dto.CategoryDto;
+import com.example.test_spring_boot.Dto.SearchDto.SearchReportDto;
 import com.example.test_spring_boot.Entity.CategoryEntity;
 import com.example.test_spring_boot.Repository.CategoryRepository;
 import com.example.test_spring_boot.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,12 +31,14 @@ public class CategoryController {
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/index")
     public String categoryIndex(Model model, HttpServletRequest request){
-        List<CategoryDto> categoryEntities = categoryRepository.getAllDto();
-        model.addAttribute("Categories", categoryEntities);
+//        Page<CategoryDto> categoryEntities = categoryService.pageAll();
+//        model.addAttribute("Categories", categoryEntities);
         model.addAttribute("categoryDto", new CategoryDto());
         HttpSession session = request.getSession();
         String uzxc = session.getAttribute("nameUser").toString();
         model.addAttribute("nameUser", uzxc);
+        List<CategoryDto> lstCategory = categoryRepository.getAllDto();
+        model.addAttribute("categories",lstCategory);
         return "view_admin/category/index";
     }
 
@@ -57,6 +60,14 @@ public class CategoryController {
     public String getCategory(@PathVariable("id") Long id, Model model){
         CategoryEntity category = categoryRepository.findById(id).get();
         model.addAttribute("categoryDto", new CategoryDto(category));
+        List<CategoryDto> lstCategory = categoryRepository.getAllDto();
+        model.addAttribute("categories",lstCategory);
         return "view_admin/category/categoryDetail";
+    }
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping(value = "/searchPage")
+    public ResponseEntity<?> searchReportByPage(SearchReportDto searchReportDto){
+        Page<CategoryDto> a = categoryService.searchByDto(searchReportDto);
+        return ResponseEntity.ok(a);
     }
 }

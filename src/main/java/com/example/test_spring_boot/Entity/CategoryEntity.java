@@ -14,7 +14,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class CategoryEntity extends BaseEntity{
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         try{
                             if(x.getAuthority().equals("ROLE_ADMIN")){
                                 session.setAttribute("nameUser", finalNameZ);
-                                response.sendRedirect("/product/index");
+                                response.sendRedirect("/product/categoryProduct/index");
                             }
                             else if(x.getAuthority().equals("ROLE_USER")){
                                 session.setAttribute("nameUser", finalNameZ);

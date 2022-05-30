@@ -1,10 +1,13 @@
 package com.example.test_spring_boot.RestController;
 
 import com.example.test_spring_boot.Dto.CategoryDto;
+import com.example.test_spring_boot.Dto.ProductDto;
+import com.example.test_spring_boot.Dto.SearchDto.SearchReportDto;
 import com.example.test_spring_boot.Entity.CategoryEntity;
 import com.example.test_spring_boot.Repository.CategoryRepository;
 import com.example.test_spring_boot.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,4 +46,5 @@ public class RestCategoryController {
     public CategoryDto getCategory(@PathVariable("id") Long id){
         return new CategoryDto(categoryRepository.findById(id).get());
     }
+
 }

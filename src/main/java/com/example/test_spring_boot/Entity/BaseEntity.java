@@ -1,5 +1,6 @@
 package com.example.test_spring_boot.Entity;
 
+import com.example.test_spring_boot.Configuration.Oauth2.CustomOauth2User;
 import com.example.test_spring_boot.Configuration.Security.UserDetailCustom;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,13 +29,14 @@ public abstract class BaseEntity {
     @PrePersist
     public void prePersist(){
         String createBy ="unknowUser";
-        try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailCustom userDetailsCustom = (UserDetailCustom) authentication.getPrincipal();
             createBy = userDetailsCustom.getUsername();
-        }
-        catch (Exception e){
-            System.out.println(e);
+
+        if (userDetailsCustom.getUsername() == null){
+            authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomOauth2User oAuth2User = (CustomOauth2User) authentication.getPrincipal();
+            createBy = oAuth2User.getName();
         }
 
         this.CreateBy =createBy;
@@ -44,14 +46,15 @@ public abstract class BaseEntity {
     @PreUpdate
     public void preUpdate(){
         String modifyBy ="unknowUser";
-        try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailCustom userDetailsCustom = (UserDetailCustom) authentication.getPrincipal();
             modifyBy = userDetailsCustom.getUsername();
-        }
-        catch (Exception e){
-            System.out.println(e);
-        }
+
+            if (userDetailsCustom.getUsername() == null){
+                 authentication = SecurityContextHolder.getContext().getAuthentication();
+                CustomOauth2User oAuth2User = (CustomOauth2User) authentication.getPrincipal();
+                modifyBy = oAuth2User.getName();
+            }
         this.ModifierBy = modifyBy;
         this.ModifierDate = new Date();
     }

@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/post")
 @Controller
 public class PostController {
-
     @Autowired
     PostRepository postRepository;
-
-
-
 }

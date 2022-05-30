@@ -78,6 +78,8 @@ public class RestProductController {
         return productService.searchPageByDto(searchReportDto);
     }
 
+
+
     @PostMapping("/add_cart/{id}")
     public List<CartDto> addToCart(@PathVariable("id")Long id, HttpServletRequest request, CartDto cartDto){
         HttpSession session = request.getSession();

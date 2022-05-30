@@ -25,6 +25,7 @@ public class ProductHistoryDto {
     private String username = "";
     private String fullname = "";
     private String price;
+    private String image;
 
     public ProductHistoryDto(ProductHistory productHistory){
         if(productHistory != null){
@@ -38,6 +39,7 @@ public class ProductHistoryDto {
             if(productHistory.getUserEntity() != null && productHistory.getUserEntity().getFullname() != null)
                 this.fullname = productHistory.getUserEntity().getFullname();
             this.price = productHistory.getProductEntity().getPrice().toString();
+            this.image = productHistory.getProductEntity().getImage();
         }
     }
 }

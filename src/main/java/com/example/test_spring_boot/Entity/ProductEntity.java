@@ -34,7 +34,7 @@ public class ProductEntity extends BaseEntity{
     @JoinColumn(name = "review_id", referencedColumnName = "id")
     private ReviewEntity reviewEntity;
 
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private CategoryEntity categoryEntity;
 
 }

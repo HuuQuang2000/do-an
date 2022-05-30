@@ -10,6 +10,7 @@ import com.example.test_spring_boot.Entity.ProductEntity;
 import com.example.test_spring_boot.Entity.ProductHistory;
 import com.example.test_spring_boot.Entity.UserEntity;
 import com.example.test_spring_boot.Repository.*;
+import com.example.test_spring_boot.Service.CategoryService;
 import com.example.test_spring_boot.Service.MailService;
 import com.example.test_spring_boot.Service.ProductHistoryService;
 import com.example.test_spring_boot.Service.ProductService;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/product")
@@ -57,7 +58,22 @@ public class ProductController {
 
     @Autowired
     ProductHistoryService productHistoryService;
+    @Autowired
+    CategoryService categoryService;
 
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/categoryProduct/index")
+    public String getAllCategoryProduct(Model model, HttpServletRequest request){
+        List<CategoryDto> categoryEntities = categoryRepository.findAll().stream().map(x -> new CategoryDto(x)).collect(Collectors.toList());
+        model.addAttribute("categories", categoryEntities);
+        model.addAttribute("categoryDto", new CategoryDto());
+        model.addAttribute("productDto", new ProductDto());
+        HttpSession session = request.getSession();
+        String uzxc = session.getAttribute("nameUser").toString();
+        model.addAttribute("nameUser", uzxc);
+        return "view_admin/product/allProduct";
+    }
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/index")
     public String productAdmin(Model model, HttpServletRequest request){
@@ -70,6 +86,20 @@ public class ProductController {
         model.addAttribute("nameUser", uzxc);
         return "view_admin/product/index";
     }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/category/getAll/{id}")
+    public String getAllproductByIdCategory(@PathVariable("id") Long id,Model model, HttpServletRequest request){
+        model.addAttribute("lstProduct", productService.getByPage(0,10));
+        model.addAttribute("categories", categoryRepository.getAllDto());
+        model.addAttribute("categoryDto", categoryRepository.findById(id).get());
+        model.addAttribute("productDto", new ProductDto());
+        HttpSession session = request.getSession();
+        String uzxc = session.getAttribute("nameUser").toString();
+        model.addAttribute("nameUser", uzxc);
+        return "view_admin/product/index";
+    }
+
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/product_detail/{id}")
     public String getProduct(Model model, @PathVariable("id") Long id, HttpServletRequest request){
@@ -86,17 +116,24 @@ public class ProductController {
         return "view_admin/product/productDetail";
     }
     @Secured({"ROLE_ADMIN"})
+    @PostMapping("/create_update_productAtCategory")
+    public String addUpdateProductAtCategory(ProductDto dto) throws IOException {
+        productService.createOrUpdate(dto);
+        return "redirect:/product/category/getAll/"+ dto.getCategoryId();
+    }
+    @Secured({"ROLE_ADMIN"})
     @PostMapping("/create_update_product")
     public String addUpdateProduct(ProductDto dto) throws IOException {
         productService.createOrUpdate(dto);
-        return "redirect:/product/index";
+        return "redirect:/product/categoryProduct/index";
     }
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/remove_product/{id}")
     public String removeProduct(@PathVariable("id") Long id){
+        ProductDto productDto = new ProductDto(productRepository.findById(id).get());
         productRepository.deleteById(id);
-        return "redirect:/product/index";
+        return "redirect:/product/category/getAll/"+productDto.getCategoryId();
     }
 
     @Secured({"ROLE_ADMIN"})
@@ -255,8 +292,4 @@ public class ProductController {
             return "paySuccess";
         }
     }
-
-
-
-
 }

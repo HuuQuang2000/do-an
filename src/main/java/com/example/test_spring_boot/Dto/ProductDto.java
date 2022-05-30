@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -18,7 +19,7 @@ public class ProductDto {
     private String image;
     private MultipartFile file;
     private Long categoryId;
-    private Date CreateDate;
+    private String CreateDate;
     private String CreateBy;
     private String categoryName;
     private Integer rating;
@@ -41,7 +42,8 @@ public class ProductDto {
                 this.categoryName = productEntity.getCategoryEntity().getName();
             }
             this.CreateBy = productEntity.getCreateBy();
-            this.CreateDate = productEntity.getCreateDate();
+            this.CreateDate =  new SimpleDateFormat("yyyy-MM-dd").format(productEntity.getCreateDate());
+
             if(productEntity.getReviewEntity() != null && productEntity.getReviewEntity().getRating() != null){
                 this.rating = productEntity.getReviewEntity().getRating();
             }
@@ -66,7 +68,8 @@ public class ProductDto {
                 this.categoryName = productEntity.getCategoryEntity().getName();
             }
             this.CreateBy = productEntity.getCreateBy();
-            this.CreateDate = productEntity.getCreateDate();
+
+            this.CreateDate =  new SimpleDateFormat("yyyy-MM-dd").format(productEntity.getCreateDate());
             if(productEntity.getReviewEntity() != null && productEntity.getReviewEntity().getRating() != null){
                 this.rating = productEntity.getReviewEntity().getRating();
             }

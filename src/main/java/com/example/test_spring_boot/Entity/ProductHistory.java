@@ -20,7 +20,7 @@ public class ProductHistory extends BaseEntity{
     @Column(name = "total")
     private Integer totalItem;
 
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private ProductEntity productEntity;
 
     @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)

@@ -19,5 +19,4 @@ public interface ProductService {
     Workbook exportBySearchDto(SearchReportDto searchReportDto, HttpServletResponse response);
     List<ProductDto> getProductByCartDto(List<CartDto> lstCart);
     Page<ProductDto> searchPageByDto(SearchReportDto searchReportDto);
-
 }

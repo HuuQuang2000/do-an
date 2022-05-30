@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             userEntity.setUsername(userDto.getUsername());
             userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
             userEntity.setEmail(userDto.getEmail());
-            RoleEntity role =roleRepository.getById(2L);
+            RoleEntity role =roleRepository.findById(2L).get();
             Set<RoleEntity> roleEntities = new HashSet<>();
             roleEntities.add(role);
             userEntity.setRoles(roleEntities);
